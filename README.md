@@ -2,39 +2,50 @@
 
 这是一个独立、极简、可编译的中国科学院大学 UCAS Beamer 模板工程。它不是科研汇报 demo，而是 `college-beamer` demo 的 UCAS 视觉版本：页面结构、演示目的和内容顺序贴近参考 PDF，视觉资产替换为 UCAS 素材，整体保持白底、大留白、左上角 logo block、克制的深色章节页和主色代码块。
 
+## 来源、修改与许可 / Attribution, modifications and license
+
+本项目是 [liu-qilong/college-beamer](https://github.com/liu-qilong/college-beamer) 的修改衍生版本；原项目由 [liu-qilong](https://github.com/liu-qilong) 维护，并采用 [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)（CC BY 4.0）许可。`college-beamer` 本身基于 Federico Zenith 创建的 [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx) 模板。
+
+本衍生版本的主要修改包括：
+
+- 将视觉系统改为面向中国科学院大学（UCAS）的配色、标识和背景素材；
+- 将主题重构为独立的 `ucasminimal.sty`；
+- 调整标题页、章节页、页眉页脚、代码块和结束页版式；
+- 修改示例幻灯片、构建配置和使用文档；
+- 移除演示文件中的个人身份和联系方式。
+
+除另有说明外，本项目中的源代码、模板和文档继续依据 CC BY 4.0 发布；完整条款见 [`LICENSE.md`](LICENSE.md)。使用、复制或修改本项目时，请保留上述来源链接、许可声明和修改说明。
+
+本项目是非官方社区作品，与中国科学院大学、原项目作者及 SINTEF 均无隶属、赞助或认可关系。学校名称、校徽、标志及其他商标仍归其各自权利人所有，不因本项目采用 CC BY 4.0 而获得许可。
+
+This project is a modified derivative of [liu-qilong/college-beamer](https://github.com/liu-qilong/college-beamer), maintained by [liu-qilong](https://github.com/liu-qilong) and licensed under CC BY 4.0. The upstream project is itself based on the [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx) template created by Federico Zenith. This derivative introduces a UCAS-oriented visual design, replacement institutional artwork, a standalone theme implementation, revised layouts, examples and documentation, and removal of personal details. It is an unofficial community project and does not imply endorsement by UCAS, the upstream authors or SINTEF.
+
 ## 文件结构
 
 ```text
 ucas-minimal-beamer/
 ├─ main.tex
-├─ main-zh.tex
+├─ main.pdf
 ├─ ucasminimal.sty
 ├─ latexmkrc
+├─ LICENSE.md
 ├─ README.md
-├─ assets/
+└─ assets/
 │  ├─ ucas-horizontal-logo-blue.png
 │  ├─ ucas-horizontal-logo-white.png
 │  ├─ ucas-emblem-blue.png
 │  ├─ ucas-emblem-white.png
 │  └─ ucas-background.png
-└─ tools/
-   └─ install-source-han-serif-windows.ps1
 ```
 
-`main.tex` 是英文 demo，`main-zh.tex` 是中文预览 demo。二者使用同一个样式文件 `ucasminimal.sty`。
+`main.tex` 是英文 demo，使用 `ucasminimal.sty` 主题；`main.pdf` 是对应的预编译预览。
 
 ## 编译方式
 
-英文 demo：
+编译 demo：
 
 ```bash
 latexmk -xelatex main.tex
-```
-
-中文预览：
-
-```bash
-latexmk -xelatex main-zh.tex
 ```
 
 如果没有 `latexmk`，可以连续运行两次 XeLaTeX：
@@ -42,13 +53,6 @@ latexmk -xelatex main-zh.tex
 ```bash
 xelatex main.tex
 xelatex main.tex
-```
-
-中文预览对应为：
-
-```bash
-xelatex main-zh.tex
-xelatex main-zh.tex
 ```
 
 必须使用 XeLaTeX。目录、章节页和交叉引用需要至少两轮编译才能稳定。如果 VS Code 或 PDF 阅读器占用了 `main.pdf`，可能会出现 `Unable to open "main.pdf"`，关闭 PDF 预览后重新编译即可。
@@ -61,7 +65,6 @@ xelatex main-zh.tex
 
 ```text
 main.tex          保留为英文 demo
-main-zh.tex       保留为中文预览
 my-talk.tex       你的正式 presentation
 ucasminimal.sty   主题样式，除非改视觉系统，否则不要频繁改
 ```
@@ -340,23 +343,10 @@ Q&A
 
 本工程不包含字体文件，也不会自动下载字体。请手动安装：
 
-1. 从 Adobe Source Han Serif 官方 GitHub Releases 下载 Source Han Serif SC 静态 OTF 字体。
+1. 从 [Adobe Source Han Serif 官方 Releases](https://github.com/adobe-fonts/source-han-serif/releases) 下载 Source Han Serif SC 静态 OTF 字体。
 2. 解压下载包。
-3. 将 `.otf` 字体文件放入：
-
-```text
-tools/fonts/SourceHanSerifSC/
-```
-
-4. 在工程根目录运行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/install-source-han-serif-windows.ps1
-```
-
-5. 重启 PowerPoint、Word、VS Code 和 TeX 编辑器。
-
-脚本默认做当前用户级安装，不需要管理员权限；如果确实需要系统级安装，可用管理员 PowerShell 运行并添加 `-System` 参数。
+3. 选中所需 `.otf` 文件，右键选择“安装”或“为所有用户安装”。
+4. 重启 PowerPoint、Word、VS Code 和 TeX 编辑器。
 
 ### Office 使用方式
 
