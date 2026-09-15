@@ -1,0 +1,334 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ucasminimal}[2026/07/06 UCAS minimal Beamer theme]
+
+\RequirePackage{iftex}
+\ifXeTeX\else
+  \PackageError{ucasminimal}{This theme must be compiled with XeLaTeX}{Use xelatex or latexmk -xelatex.}
+\fi
+
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{fontspec}
+\RequirePackage{xeCJK}
+\RequirePackage{amsmath,amssymb,bm}
+\RequirePackage{listings}
+\RequirePackage{hyperref}
+
+\makeatletter
+
+% User configuration
+\newcommand{\ucas@institute}{}
+\newcommand{\ucas@department}{}
+\newcommand{\ucas@email}{}
+\newcommand{\ucas@shorttitle}{}
+
+\newcommand{\ucas@emblemblue}{assets/ucas-emblem-blue.png}
+\newcommand{\ucas@emblemwhite}{assets/ucas-emblem-white.png}
+\newcommand{\ucas@hlogoblue}{assets/ucas-horizontal-logo-blue.png}
+\newcommand{\ucas@hlogowhite}{assets/ucas-horizontal-logo-white.png}
+\newcommand{\ucas@background}{assets/ucas-background.png}
+
+\newcommand{\ucasInstitute}[1]{\renewcommand{\ucas@institute}{#1}}
+\newcommand{\ucasDepartment}[1]{\renewcommand{\ucas@department}{#1}}
+\newcommand{\ucasEmail}[1]{\renewcommand{\ucas@email}{#1}}
+\newcommand{\ucasShortTitle}[1]{\renewcommand{\ucas@shorttitle}{#1}}
+
+\newcommand{\ucasEmblemBluePath}[1]{\renewcommand{\ucas@emblemblue}{#1}}
+\newcommand{\ucasEmblemWhitePath}[1]{\renewcommand{\ucas@emblemwhite}{#1}}
+\newcommand{\ucasHorizontalLogoBluePath}[1]{\renewcommand{\ucas@hlogoblue}{#1}}
+\newcommand{\ucasHorizontalLogoWhitePath}[1]{\renewcommand{\ucas@hlogowhite}{#1}}
+\newcommand{\ucasBackgroundPath}[1]{\renewcommand{\ucas@background}{#1}}
+
+\newif\ifucasShowPageNumber
+\ucasShowPageNumberfalse
+
+% Colors
+\definecolor{UCASBlue}{RGB}{128,30,45}
+\definecolor{UCASDarkGray}{RGB}{54,58,64}
+\definecolor{UCASGray}{RGB}{122,128,138}
+\definecolor{UCASLightGray}{RGB}{242,244,247}
+\definecolor{UCASCodeText}{RGB}{246,248,252}
+\definecolor{UCASCodeMuted}{RGB}{178,196,224}
+\colorlet{UCASCodeNumber}{white!56!UCASBlue}
+\definecolor{UCASCodeAccent}{RGB}{216,229,249}
+\definecolor{UCASBlueDim}{RGB}{185,120,130}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=UCASBlue,
+  urlcolor=UCASBlue,
+  citecolor=UCASBlue
+}
+
+% Fonts
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\IfFontExistsTF{TeX Gyre Pagella}
+  {\setmainfont{TeX Gyre Pagella}}
+  {\setmainfont{Latin Modern Roman}}
+\IfFontExistsTF{TeX Gyre Heros}
+  {\setsansfont{TeX Gyre Heros}}
+  {\setsansfont{Latin Modern Sans}}
+\IfFontExistsTF{JetBrains Mono}
+  {\setmonofont{JetBrains Mono}[Scale=0.86]}
+  {\setmonofont{Latin Modern Mono}[Scale=0.88]}
+
+\IfFontExistsTF{SimSun}
+  {\setCJKmainfont{SimSun}[AutoFakeBold=true,AutoFakeSlant=true]}
+  {%
+    \IfFontExistsTF{Noto Serif CJK SC}
+      {\setCJKmainfont{Noto Serif CJK SC}[AutoFakeBold=true]}
+      {%
+        \IfFontExistsTF{Source Han Serif SC}
+          {\setCJKmainfont{Source Han Serif SC}[AutoFakeBold=true]}
+          {%
+            \IfFontExistsTF{Microsoft YaHei}
+              {\setCJKmainfont{Microsoft YaHei}[AutoFakeBold=true]}
+              {%
+                \IfFontExistsTF{FandolSong-Regular.otf}
+                  {\setCJKmainfont{FandolSong-Regular.otf}[BoldFont=FandolSong-Bold.otf,ItalicFont=FandolKai-Regular.otf]}
+                  {\PackageWarningNoLine{ucasminimal}{No preferred CJK font found; using xeCJK defaults}}
+              }%
+          }%
+      }%
+  }
+
+\IfFontExistsTF{Microsoft YaHei Mono}
+  {\setCJKmonofont{Microsoft YaHei Mono}[AutoFakeBold=true]}
+  {%
+    \IfFontExistsTF{SimSun}
+      {\setCJKmonofont{SimSun}[AutoFakeBold=true]}
+      {%
+        \IfFontExistsTF{Noto Sans Mono CJK SC}
+          {\setCJKmonofont{Noto Sans Mono CJK SC}[AutoFakeBold=true]}
+          {\PackageWarningNoLine{ucasminimal}{No preferred CJK monospaced font found; using xeCJK defaults}}%
+      }%
+  }
+
+\usefonttheme{serif}
+\setbeamerfont{title}{series=\scshape,size=\Large}
+\setbeamerfont{subtitle}{series=\mdseries,size=\normalsize}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{framesubtitle}{series=\mdseries,size=\small}
+\setbeamerfont{section in toc}{size=\large}
+\setbeamerfont{footline}{size=\scriptsize}
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+
+% Basic Beamer setup
+\setbeamersize{text margin left=0.95cm,text margin right=0.85cm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{frametitle continuation}{}
+\setbeamercolor{normal text}{fg=UCASDarkGray,bg=white}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{structure}{fg=UCASBlue}
+\setbeamercolor{title}{fg=UCASBlue}
+\setbeamercolor{subtitle}{fg=UCASBlue}
+\setbeamercolor{frametitle}{fg=UCASBlue}
+\setbeamercolor{framesubtitle}{fg=UCASBlue}
+\setbeamercolor{alerted text}{fg=UCASBlue}
+\setbeamercolor{page number in head/foot}{fg=UCASGray,bg=}
+\setlength{\parskip}{0.25em}
+
+% Logo block
+\newcommand{\ucas@logoblock}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \coordinate (ucaslogoNW) at ([xshift=0.065\paperwidth,yshift=0pt]current page.north west);
+    \fill[UCASBlue] (ucaslogoNW) rectangle ++(0.09\paperwidth,-0.20\paperheight);
+    \node[anchor=center] at ([xshift=0.045\paperwidth,yshift=\dimexpr-0.20\paperheight+0.045\paperwidth\relax]ucaslogoNW)
+      {\includegraphics[width=0.0585\paperwidth,keepaspectratio]{\ucas@emblemwhite}};
+  \end{tikzpicture}%
+}
+\newcommand{\ucasLogoBlock}{\ucas@logoblock}
+\setbeamertemplate{headline}{\ucas@logoblock}
+
+% Frame title layout
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.38cm}%
+  \hspace*{2.75cm}%
+  \begin{minipage}[t]{0.68\paperwidth}
+    \raggedright
+    \usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par
+    \vspace{0.02cm}
+    {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\par}
+  \end{minipage}%
+  \vspace*{0.48cm}%
+}
+
+\pretocmd{\beamer@checkframetitle}{%
+  \ifnum\value{section}>0\relax
+    \framesubtitle{\thesection\ \secname}%
+  \fi
+}{}{}
+
+% Footline: off by default, weak page number only when explicitly enabled.
+\setbeamertemplate{footline}{%
+  \ifucasShowPageNumber
+    \leavevmode
+    \hbox{%
+      \begin{beamercolorbox}[wd=\paperwidth,ht=3.2mm,dp=1.6mm,rightskip=0.78cm]{page number in head/foot}
+        \hfill\usebeamerfont{page number in head/foot}\insertframenumber/\inserttotalframenumber
+      \end{beamercolorbox}%
+    }%
+  \fi
+}
+
+% Lists
+\setbeamertemplate{itemize item}{\raise0.1ex\hbox{\textcolor{UCASBlue}{\scriptsize$\bullet$}}}
+\setbeamertemplate{itemize subitem}{\textcolor{UCASGray}{\scriptsize--}}
+\setbeamertemplate{itemize subsubitem}{\textcolor{UCASGray}{\scriptsize$\circ$}}
+\setbeamertemplate{enumerate item}{\textcolor{UCASBlue}{\insertenumlabel.}}
+\setbeamertemplate{enumerate subitem}{\textcolor{UCASGray}{\insertenumlabel.\insertsubenumlabel}}
+
+% TOC
+\setbeamertemplate{section in toc}{%
+  \leavevmode\textcolor{white}{\scriptsize$\blacktriangleright$}\hspace{0.55em}\textcolor{white}{\inserttocsection}\par
+}
+\setbeamertemplate{section in toc shaded}{%
+  \leavevmode\textcolor{UCASBlueDim}{\scriptsize$\blacktriangleright$}\hspace{0.55em}\textcolor{UCASBlueDim}{\inserttocsection}\par
+}
+\setbeamertemplate{subsection in toc}{}
+
+\newcommand{\ucas@darkframecolors}{%
+  \hypersetup{linkcolor=white,urlcolor=white,citecolor=white}%
+  \setbeamercolor{background canvas}{bg=UCASBlue}%
+  \setbeamercolor{normal text}{fg=white,bg=UCASBlue}%
+  \setbeamercolor{frametitle}{fg=white}%
+  \setbeamercolor{framesubtitle}{fg=white}%
+  \setbeamercolor{structure}{fg=white}%
+  \setbeamercolor{section in toc}{fg=white}%
+  \setbeamercolor{section in toc shaded}{fg=UCASBlueDim}%
+}
+
+\AtBeginSection[]{%
+  \begingroup
+  \setbeamertemplate{footline}{}%
+  \ucas@darkframecolors
+  \begin{frame}{目录}
+    \vspace*{0.95cm}
+    \tableofcontents[currentsection]
+  \end{frame}
+  \endgroup
+}
+
+% Blocks
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamerfont{block title}{size=\small,series=\bfseries}
+\setbeamerfont{block body}{size=\small}
+\setbeamercolor{block title}{fg=white,bg=UCASBlue}
+\setbeamercolor{block body}{fg=UCASDarkGray,bg=UCASLightGray}
+\setbeamercolor{block title alerted}{fg=white,bg=UCASDarkGray}
+\setbeamercolor{block body alerted}{fg=UCASDarkGray,bg=UCASLightGray}
+\setbeamercolor{block title example}{fg=white,bg=UCASGray}
+\setbeamercolor{block body example}{fg=UCASDarkGray,bg=UCASLightGray}
+
+% Code blocks
+\setbeamerfont{ucas code title}{size=\small}
+\setbeamercolor{ucas code title}{fg=white,bg=UCASBlue}
+\setbeamercolor{ucas code body}{fg=UCASCodeText,bg=UCASBlue}
+
+\lstdefinestyle{ucaslisting}{
+  basicstyle=\ttfamily\scriptsize\color{UCASCodeText},
+  keywordstyle=\color{UCASCodeAccent},
+  commentstyle=\color{UCASCodeMuted},
+  stringstyle=\color{UCASCodeText},
+  numberstyle=\tiny\color{UCASCodeNumber},
+  backgroundcolor=\color{UCASBlue},
+  numbers=left,
+  numbersep=7pt,
+  showstringspaces=false,
+  showspaces=false,
+  showtabs=false,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  tabsize=4,
+  columns=fullflexible,
+  xleftmargin=1.2em,
+  xrightmargin=0.6em
+}
+\lstset{style=ucaslisting}
+
+\newcommand{\ucasCodeBlockSetup}{%
+  \setbeamerfont{block title}{size=\small,series=\mdseries}%
+  \setbeamerfont{block body}{size=\scriptsize}%
+  \setbeamercolor{block title}{fg=white,bg=UCASBlue}%
+  \setbeamercolor{block body}{fg=UCASCodeText,bg=UCASBlue}%
+  \lstset{style=ucaslisting}%
+}
+
+\lstnewenvironment{ucascode}[1][]{%
+  \lstset{style=ucaslisting,#1}%
+}{}
+
+\newcommand{\codebs}{\textbackslash{}}
+\newcommand{\ucascodeline}[2]{%
+  \makebox[1.8em][r]{\textcolor{UCASCodeNumber}{\scriptsize #1}}\hspace{0.75em}#2\par
+}
+\newenvironment{ucascodebox}[1]{%
+  \begingroup
+  \ucasCodeBlockSetup
+  \begin{block}{#1}
+  \ttfamily\scriptsize\color{UCASCodeText}%
+  \setlength{\parskip}{0pt}%
+  \setlength{\baselineskip}{1.25\baselineskip}%
+}{%
+  \end{block}%
+  \endgroup
+}
+
+% Title page
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south east,opacity=0.78] at ([xshift=0.18cm,yshift=-0.06cm]current page.south east)
+      {\includegraphics[width=0.60\paperwidth]{\ucas@background}};
+    \node[anchor=north west,align=left,text width=0.58\paperwidth] at ([xshift=0.98cm,yshift=-3.12cm]current page.north west) {%
+      {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+      \vspace{0.25cm}
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+      \vspace{0.25cm}
+      {\usebeamerfont{author}\insertauthor\par}
+      \ifstrempty{\ucas@email}{}{{\small\href{mailto:\ucas@email}{\ucas@email}\par}}%
+      \ifstrempty{\ucas@institute}{}{\vspace{0.18cm}{\small\ucas@institute\par}}%
+      \ifstrempty{\ucas@department}{}{{\small\ucas@department\par}}%
+      \vspace{0.18cm}
+      {\usebeamerfont{date}\insertdate\par}
+    };
+  \end{tikzpicture}%
+  \null
+}
+
+\renewcommand{\maketitle}{%
+  \begingroup
+  \setbeamertemplate{footline}{}%
+  \begin{frame}
+    \titlepage
+  \end{frame}
+  \endgroup
+}
+
+% Q&A page
+\newcommand{\QApage}{%
+  \begingroup
+  \setbeamertemplate{footline}{}%
+  \ucas@darkframecolors
+  \begin{frame}
+    \vfill
+    \begin{center}
+      {\Huge\textcolor{white}{Q\&A}\par}
+      \vspace{0.35cm}
+      {\Large\bfseries\textcolor{white}{感谢您的聆听和反馈}\par}
+    \end{center}
+    \vfill
+  \end{frame}
+  \endgroup
+}
+
+% Convenience commands used by the demo.
+\newcommand{\bhref}[2]{\href{#1}{\textcolor{UCASBlue}{#2}}}
+\newcommand{\ctextbf}[1]{\textbf{\textcolor{UCASBlue}{#1}}}
+\newcommand{\ctexttt}[1]{\texttt{\textcolor{UCASBlue}{#1}}}
+
+\makeatother
